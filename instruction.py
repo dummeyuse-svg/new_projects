@@ -70,3 +70,85 @@ Side view:
                         ↕ gap (uplifted) or no gap (clamped)
 [ JIG        ]  ← micro hall effect sensor recessed into corner area
 But jig cannot be touched — so this is out too
+
+
+
+project/
+│
+├── raw_csvs/
+│   ├── jan_feb.csv
+│   ├── mar_apr.csv
+│   ├── may_jun.csv
+│
+├── merged/
+│   └── full_year.csv
+│
+├── app.py
+├── clean_excel.py
+├── merge_csv.py
+├── index.html
+
+merge_csv.py
+
+import pandas as pd
+import glob
+import os
+
+# Folder containing all CSV files
+INPUT_FOLDER = "raw_csvs"
+
+# Output merged file
+OUTPUT_FILE = "merged/full_year.csv"
+
+# Find all CSV files
+csv_files = glob.glob(os.path.join(INPUT_FOLDER, "*.csv"))
+
+if not csv_files:
+    print("No CSV files found.")
+    exit()
+
+all_data = []
+
+for file in csv_files:
+    print(f"Reading: {file}")
+
+    try:
+        df = pd.read_csv(file)
+
+        # Optional: remove completely empty rows
+        df = df.dropna(how='all')
+
+        all_data.append(df)
+
+    except Exception as e:
+        print(f"Error reading {file}: {e}")
+
+# Combine all CSVs
+merged_df = pd.concat(all_data, ignore_index=True)
+
+# Optional: remove duplicate rows
+merged_df = merged_df.drop_duplicates()
+
+# Create output folder if not exists
+os.makedirs("merged", exist_ok=True)
+
+# Save final merged CSV
+merged_df.to_csv(OUTPUT_FILE, index=False)
+
+print(f"\nMerged {len(csv_files)} files successfully.")
+print(f"Final rows: {len(merged_df)}")
+print(f"Saved to: {OUTPUT_FILE}")
+
+
+After putting all CSV files in raw_csvs/:
+
+python merge_csv.py
+
+It creates:
+
+merged/full_year.csv
+Then Run Your Existing Cleaner
+
+Your current command remains same:
+
+python clean_excel.py --file merged/full_year.csv
