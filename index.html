@@ -815,3 +815,67 @@ to:
 </script>
 </body>
 </html>
+
+light mode 
+:root {
+  --bg:        #0c0c0f;
+  --surface:   #111116;
+  --surface2:  #18181f;
+  --surface3:  #1e1e28;
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.12);
+  --accent:    #d97706;
+  --accent2:   #f59e0b;
+  --accent-glow: rgba(217,119,6,0.15);
+  --text:      #f0f0f0;
+  --text2:     #a0a0b0;
+  --text3:     #606070;
+  --green:     #10b981;
+  --blue:      #3b82f6;
+  --danger:    #ef4444;
+  --radius:    14px;
+  --font:      'Geist', sans-serif;
+  --mono:      'Geist Mono', monospace;
+}
+
+[data-theme="light"] {
+  --bg:        #f5f5f0;
+  --surface:   #ffffff;
+  --surface2:  #f0efe8;
+  --surface3:  #e8e7df;
+  --border:    rgba(0,0,0,0.08);
+  --border2:   rgba(0,0,0,0.14);
+  --accent:    #d97706;
+  --accent2:   #b45309;
+  --accent-glow: rgba(217,119,6,0.12);
+  --text:      #111110;
+  --text2:     #5a5a50;
+  --text3:     #9a9a8e;
+  --green:     #059669;
+  --blue:      #2563eb;
+  --danger:    #dc2626;
+}
+
+<button class="icon-btn theme-toggle-btn" id="theme-toggle" title="Toggle theme" onclick="toggleTheme()">🌙</button>
+<button class="new-btn" onclick="newConversation()">
+  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+    <path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+  </svg>
+  New chat
+</button>
+
+function toggleTheme() {
+  const isDark = document.documentElement.getAttribute('data-theme') !== 'light';
+  document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('theme-toggle').textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('mttr-theme', isDark ? 'light' : 'dark');
+}
+
+// Restore saved theme on load
+(function() {
+  const saved = localStorage.getItem('mttr-theme');
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.getElementById('theme-toggle') && (document.getElementById('theme-toggle').textContent = '☀️');
+  }
+})();
